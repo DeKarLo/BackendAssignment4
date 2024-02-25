@@ -1,0 +1,13 @@
+/* styles.css */
+ul.evolution-chain {
+    list-style-type: none; /* Remove list bullets */
+    padding-left: 20px; /* Add left padding for indentation */
+}
+
+ul.evolution-chain li {
+    margin-bottom: 5px; /* Add margin between list items */
+}
+
+ul.evolution-chain ul {
+    padding-left: 20px; /* Add left padding for indentation */
+}
