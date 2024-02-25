@@ -29,17 +29,29 @@ async function getPokemonData(pokemonName) {
     }
 }
 
+// Function to get evolution chain with names and images
 async function getEvolutionChain(chain) {
     const chainData = [];
     let current = chain;
-    while (current) {
+
+    async function traverse(current) {
         const pokemonData = await getPokemonData(current.species.name);
         chainData.push({
             name: current.species.name,
-            imageUrl: pokemonData.sprites.other["dream_world"].front_default,
+            imageUrl: pokemonData.sprites.other["home"].front_default,
         });
-        current = current.evolves_to[0];
+
+        // Check if there are multiple ways to evolve
+        if (current.evolves_to.length > 1) {
+            for (const next of current.evolves_to) {
+                await traverse(next);
+            }
+        } else if (current.evolves_to.length === 1) {
+            await traverse(current.evolves_to[0]);
+        }
     }
+
+    await traverse(current);
     return chainData;
 }
 
@@ -64,7 +76,7 @@ app.get("/pokemon", async (req, res) => {
 
     const name = pokemonData.name;
     const description = getDescription(pokemonSpeciesData);
-    const imageUrl = pokemonData.sprites.other["dream_world"].front_default;
+    const imageUrl = pokemonData.sprites.other["home"].front_default;
 
     // Fetch evolution chain data
     const evolutionChainUrl = pokemonSpeciesData.evolution_chain.url;
