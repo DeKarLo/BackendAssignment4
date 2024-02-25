@@ -15,18 +15,21 @@
             </div>
         </nav>
         <div class="container mt-4">
-            <% if (error) { %>
-            <div class="alert alert-danger" role="alert"><%= error %></div>
-            <% } else if (pokemon) { %>
+            <% if (pokemon) { %>
             <div class="card">
-                <div class="card-header h1"><%= pokemon.name.toUpperCase() %> Details</div>
+                <div class="card-header h1"><%= pokemon.name.toUpperCase() %></div>
                 <div class="card-body">
                     <img src="<%= pokemon.imageUrl %>" class="img-fluid" alt="<%= pokemon.name %>" />
                     <p class="mt-3"><strong>Description:</strong> <%= pokemon.description %></p>
-                    <% if (pokemon.evolutionChain) { %>
+                    <% if (pokemon.evolutionChain.length > 0) { %>
                     <p><strong>Evolution Chain:</strong></p>
-                    <ul>
-                        <% renderEvolutionChain(pokemon.evolutionChain) %>
+                    <ul class="list-group">
+                        <% pokemon.evolutionChain.forEach(evolution => { %>
+                        <li class="list-group-item">
+                            <img src="<%= evolution.imageUrl %>" alt="<%= evolution.name %>" width="50" />
+                            <%= evolution.name %>
+                        </li>
+                        <% }); %>
                     </ul>
                     <% } else { %>
                     <p><strong>Evolution Chain:</strong> Not available</p>
@@ -35,6 +38,7 @@
             </div>
             <% } %>
         </div>
+
         <footer class="footer">
             <div class="container">
                 <span class="text-muted">© 2024 Pokemon Search</span>
@@ -42,15 +46,3 @@
         </footer>
     </body>
 </html>
-
-<% function renderEvolutionChain(chain) { %> <% let current = chain %> <% while (current) { %>
-<li><%= current.species.name %></li>
-<% if (current.evolves_to.length > 0) { %>
-<ul>
-    <% current.evolves_to.forEach(evo => { %> <% renderEvolutionChain(evo) %>
-    <!-- Recursively render subsequent evolutions -->
-    <% }) %>
-</ul>
-<% } %> <% current = null %>
-<!-- Terminate the loop to prevent infinite recursion -->
-<% } %> <% } %>

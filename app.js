@@ -29,6 +29,20 @@ async function getPokemonData(pokemonName) {
     }
 }
 
+async function getEvolutionChain(chain) {
+    const chainData = [];
+    let current = chain;
+    while (current) {
+        const pokemonData = await getPokemonData(current.species.name);
+        chainData.push({
+            name: current.species.name,
+            imageUrl: pokemonData.sprites.other["dream_world"].front_default,
+        });
+        current = current.evolves_to[0];
+    }
+    return chainData;
+}
+
 // Main page route with search functionality
 app.get("/", (req, res) => {
     res.render("index");
@@ -55,17 +69,12 @@ app.get("/pokemon", async (req, res) => {
     // Fetch evolution chain data
     const evolutionChainUrl = pokemonSpeciesData.evolution_chain.url;
     const evolutionChainResponse = await axios.get(evolutionChainUrl);
-    const evolutionChain = evolutionChainResponse.data.chain;
-    console.log(evolutionChain.evolves_to);
+    const evolutionChain = await getEvolutionChain(evolutionChainResponse.data.chain);
 
-    if (pokemonData) {
-        res.render("pokemon", {
-            pokemon: { name, description, imageUrl, evolutionChain },
-            error: null,
-        });
-    } else {
-        res.render("pokemon", { pokemon: null, error: "Pokemon not found." });
-    }
+    res.render("pokemon", {
+        pokemon: { name, description, imageUrl, evolutionChain },
+        error: null,
+    });
 });
 
 // Function to get description from flavor_text_entries
