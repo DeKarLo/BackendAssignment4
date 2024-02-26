@@ -1,4 +1,13 @@
 /* styles.css */
+
+/* Add a background color with some padding */
+
+body {
+    background-image: url("https://assets.pokemon.com/static2/_ui/img/chrome/body_bg.png");
+
+    background-repeat: repeat;
+}
+
 ul.evolution-chain {
     list-style-type: none; /* Remove list bullets */
     padding-left: 20px; /* Add left padding for indentation */
@@ -10,4 +19,39 @@ ul.evolution-chain li {
 
 ul.evolution-chain ul {
     padding-left: 20px; /* Add left padding for indentation */
+}
+
+.evolution-card {
+    display: inline-block;
+    text-align: center;
+    align-self: center;
+    align-content: center;
+    border: 1px solid #000000;
+    border-radius: 16px;
+    padding: 10px;
+    margin-right: 10px;
+}
+
+.boba {
+    background: rgba(39, 185, 185, 0.507);
+}
+.evolution-card img {
+    max-width: 100px;
+    margin-bottom: 10px;
+}
+
+.evolution-card p {
+    text-decoration: none; /* Remove default underline */
+    color: #000000; /* Set link color */
+    transition: color 0.3s; /* Add transition for color change */
+}
+
+.evolution-card a:hover {
+    color: #0056b3; /* Change link color on hover */
+}
+
+.carousel-item img {
+    max-height: 10%; /* Adjust as needed */
+    max-width: 30%;
+    margin: auto;
 }
