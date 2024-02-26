@@ -50,12 +50,6 @@ ul.evolution-chain ul {
     color: #0056b3; /* Change link color on hover */
 }
 
-.carousel-item img {
-    max-height: 10%; /* Adjust as needed */
-    max-width: 30%;
-    margin: auto;
-}
-
 .field {
     background-color: #f8f9fa;
     padding: 20px;

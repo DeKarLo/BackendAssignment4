@@ -6,7 +6,13 @@
         <title><%= pokemon ? pokemon.name + ' Details' : 'Pokemon Details' %></title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
         <link rel="stylesheet" href="/style.css" />
-        <style></style>
+        <style>
+            .carousel-item img {
+                max-height: 10%;
+                max-width: 30%;
+                margin: auto;
+            }
+        </style>
     </head>
     <body>
         <%- include("./partials/navbar") %>
@@ -18,10 +24,15 @@
                 <div class="card-header h1"><%= pokemon.name.toUpperCase() %></div>
                 <div class="card-body">
                     <img src="<%= pokemon.imageUrl %>" class="img-fluid" alt="<%= pokemon.name %>" />
-                    <p class="mt-3"><strong>Description:</strong> <%= pokemon.description %></p>
+                    <p class="mt-3">
+                        <strong> <% if (language === 'ru') { %> Описание: <% } else { %> Description: <% } %> </strong> <%=
+                        pokemon.description %>
+                    </p>
                     <% if (pokemon.evolutionChain) { %>
                     <div class="d-flex justify-content-center">
-                        <p class="h2"><strong>Evolution Chain:</strong></p>
+                        <p class="h2">
+                            <strong> <% if (language === 'ru') { %> Цепь эволюции: <% } else { %> Evolution Chain: <% } %> </strong>
+                        </p>
                     </div>
 
                     <div class="row g-4">
@@ -29,7 +40,12 @@
                         <div class="col" style="align-self: center">
                             <div class="card" style="border: 1px solid #000000">
                                 <div class="card-body boba">
-                                    <p class="card-text"><strong>Evolution <%= groupIndex %>:</strong></p>
+                                    <p class="card-text">
+                                        <strong>
+                                            <% if (language === 'ru') { %> Эволюция <%= groupIndex %>: <% } else { %> Evolution <%=
+                                            groupIndex %>: <% } %>
+                                        </strong>
+                                    </p>
                                     <% group.forEach(evolution => { %>
                                     <a href="/pokemon/<%= evolution.name.toLowerCase() %>">
                                         <div class="evolution-card">
@@ -45,12 +61,20 @@
                     </div>
                     <% } else { %>
                     <div class="d-flex justify-content-center">
-                        <p><strong>Evolution Chain:</strong> Not available</p>
+                        <p>
+                            <strong> <% if (language === 'ru') { %> Цепь эволюции: <% } else { %> Evolution Chain: <% } %> </strong>
+                            <% if (language === 'ru') { %> Не доступна <% } else { %> Not available <% } %>
+                        </p>
                     </div>
 
                     <% }%>
                     <div class="d-flex justify-content-center">
-                        <p class="h2" style="align-self: center"><strong> TCG cards associated with <%=pokemon.name%></strong></p>
+                        <p class="h2" style="align-self: center">
+                            <strong>
+                                <% if (language === 'ru') { %> Карты TCG, связанные с <%=pokemon.name%> <% } else { %> TCG cards associated
+                                with <%=pokemon.name%> <% } %>
+                            </strong>
+                        </p>
                     </div>
 
                     <% if (pokemon.cards && pokemon.cards.length > 0) { %>
@@ -79,9 +103,27 @@
             <% } %>
         </div>
         <%- include("./partials/footer.ejs") %>
-
-        <!-- Bootstrap Bundle with Popper -->
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+        <script>
+            function changeLanguage(language) {
+                fetch("/change-language", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ language: language }),
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            console.log(language + " language selected");
+                            window.location.reload();
+                        } else {
+                            console.error("Failed to change language");
+                        }
+                    })
+                    .catch((error) => console.error("Error:", error));
+            }
+        </script>
     </body>
 </html>

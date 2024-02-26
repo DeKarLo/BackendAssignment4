@@ -23,24 +23,52 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown">
+                    <a
+                        class="nav-link dropdown-toggle"
+                        href="#"
+                        id="navbarDropdown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                        <% if (language === 'ru') { %>Язык<% } else { %>Language<% } %>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li>
+                            <a class="dropdown-item" href="" onclick="changeLanguage('en')"
+                                ><% if (language === 'ru') { %>Английский<% } else { %>English<% } %></a
+                            >
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="" onclick="changeLanguage('ru')"
+                                ><% if (language === 'ru') { %>Русский<% } else { %>Russian<% } %></a
+                            >
+                        </li>
+                    </ul>
+                </li>
                 <% if (!user) { %>
                 <li class="nav-item">
-                    <a class="nav-link" href="/auth/login">Login</a>
+                    <a class="nav-link" href="/auth/login"><% if (language === 'ru') { %>Войти<% } else { %>Login<% } %></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/auth/register">Register</a>
+                    <a class="nav-link" href="/auth/register"
+                        ><% if (language === 'ru') { %>Зарегистрироваться<% } else { %>Register<% } %></a
+                    >
                 </li>
                 <% } else { %>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Welcome, <%= user.username %></a>
+                    <a class="nav-link" href=""
+                        ><% if (language === 'ru') { %>Добро пожаловать, <% } else { %>Welcome, <% } %><%= user.username %></a
+                    >
                 </li>
                 <% if(user.isAdmin) { %>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin">Admin</a>
+                    <a class="nav-link" href="/admin"><% if (language === 'ru') { %>Админ<% } else { %>Admin<% } %></a>
                 </li>
                 <% } %>
                 <li class="nav-item">
-                    <a class="nav-link" href="/auth/logout">Logout</a>
+                    <a class="nav-link" href="/auth/logout"><% if (language === 'ru') { %>Выйти<% } else { %>Logout<% } %></a>
                 </li>
                 <% } %>
             </ul>

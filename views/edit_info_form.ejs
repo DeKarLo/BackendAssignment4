@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Edit Info</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="/style.css" />
+        <style></style>
+    </head>
+    <body>
+        <%- include("./partials/navbar") %>
+        <div class="container field bg-white mt-4">
+            <% if(error) { %>
+            <div class="alert alert-danger" role="alert"><%= error %></div>
+            <% } %> <% if(message) { %>
+            <div class="alert alert-success" role="alert"><%= message %></div>
+            <% } %>
+            <h1><% if (language === 'ru') { %> Редактировать информацию <% } else { %> Edit Info <% } %></h1>
+            <form action="/admin/edit/<%= info._id %>" method="POST">
+                <div class="form-group">
+                    <label for="picture1"> <% if (language === 'ru') { %> Изображение 1 URL: <% } else { %> Picture 1 URL: <% } %> </label>
+                    <input type="text" class="form-control" id="picture1" name="picture1" value="<%= info.picture1 %>" required />
+                </div>
+                <div class="form-group">
+                    <label for="picture2"> <% if (language === 'ru') { %> Изображение 2 URL: <% } else { %> Picture 2 URL: <% } %> </label>
+                    <input type="text" class="form-control" id="picture2" name="picture2" value="<%= info.picture2 %>" required />
+                </div>
+                <div class="form-group">
+                    <label for="picture3"> <% if (language === 'ru') { %> Изображение 3 URL: <% } else { %> Picture 3 URL: <% } %> </label>
+                    <input type="text" class="form-control" id="picture3" name="picture3" value="<%= info.picture3 %>" required />
+                </div>
+                <div class="form-group">
+                    <label for="name_ru">
+                        <% if (language === 'ru') { %> Название (на русском): <% } else { %> Name (Russian): <% } %>
+                    </label>
+                    <input type="text" class="form-control" id="name_ru" name="name_ru" value="<%= info.name_ru %>" required />
+                </div>
+                <div class="form-group">
+                    <label for="name_en">
+                        <% if (language === 'ru') { %> Название (на английском): <% } else { %> Name (English): <% } %>
+                    </label>
+                    <input type="text" class="form-control" id="name_en" name="name_en" value="<%= info.name_en %>" required />
+                </div>
+                <div class="form-group">
+                    <label for="description_ru">
+                        <% if (language === 'ru') { %> Описание (на русском): <% } else { %> Description (Russian): <% } %>
+                    </label>
+                    <textarea class="form-control" id="description_ru" name="description_ru" rows="4" required>
+<%= info.description_ru %></textarea
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="description_en">
+                        <% if (language === 'ru') { %> Описание (на английском): <% } else { %> Description (English): <% } %>
+                    </label>
+                    <textarea class="form-control" id="description_en" name="description_en" rows="4" required>
+<%= info.description_en %></textarea
+                    >
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <% if (language === 'ru') { %> Обновить информацию <% } else { %> Update Info <% } %>
+                </button>
+            </form>
+        </div>
+        <%- include("./partials/footer.ejs") %>
+
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+        <script>
+            function changeLanguage(language) {
+                fetch("/change-language", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ language: language }),
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            console.log(language + " language selected");
+                            window.location.reload();
+                        } else {
+                            console.error("Failed to change language");
+                        }
+                    })
+                    .catch((error) => console.error("Error:", error));
+            }
+        </script>
+    </body>
+</html>
