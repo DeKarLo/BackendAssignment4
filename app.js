@@ -33,7 +33,11 @@ async function getPokemonCards(pokemonName, limit) {
     try {
         const response = await fetch(`https://api.pokemontcg.io/v2/cards?q=name:${pokemonName}&pageSize=${limit}`);
         const data = await response.json();
-        return data.data;
+        const cards = data.data.map((card) => ({
+            image: card.images.large,
+            link: card.cardmarket.url,
+        }));
+        return cards;
     } catch (error) {
         console.error("Error fetching Pokémon cards:", error);
         return null;
@@ -70,63 +74,64 @@ function traverse(evolution, evolutionGroups, groupIndex = 0) {
     });
 }
 app.get("/", (req, res) => {
-    res.render("index");
+    user = null;
+    res.render("index", { user, error: null });
 });
 
 app.get("/pokemon", async (req, res) => {
     const pokemonName = req.query.name.toLowerCase();
-
+    const user = null;
     const pokemonSpeciesData = await getPokemonSpeciesData(pokemonName);
     if (!pokemonSpeciesData) {
-        return res.render("pokemon", { pokemon: null, error: "Pokemon not found." });
+        return res.render("pokemon", { pokemon: null, user, error: "Pokemon not found." });
     }
 
     const pokemonData = await getPokemonData(pokemonName);
     if (!pokemonData) {
-        return res.render("pokemon", { pokemon: null, error: "Pokemon data not found." });
+        return res.render("pokemon", { pokemon: null, user, error: "Pokemon data not found." });
     }
 
     const name = pokemonData.name;
     const description = getDescription(pokemonSpeciesData);
     const imageUrl = pokemonData.sprites.other["home"].front_default;
-
-    const pokemonCards = await getPokemonCards(name, 5);
-    const cardImages = pokemonCards.map((card) => card.images.large);
     const evolutionChain = await getEvolutionChain(pokemonSpeciesData);
 
+    const cards = await getPokemonCards(name, 5);
+
     res.render("pokemon", {
-        pokemon: { name, description, imageUrl, evolutionChain, cardImages },
+        pokemon: { name, description, imageUrl, evolutionChain, cards },
+        user,
         error: null,
     });
 });
 
 app.get("/pokemon/:name", async (req, res) => {
     const pokemonName = req.params.name.toLowerCase();
-
+    const user = null;
     const pokemonSpeciesData = await getPokemonSpeciesData(pokemonName);
     if (!pokemonSpeciesData) {
-        return res.render("pokemon", { pokemon: null, error: "Pokemon not found." });
+        return res.render("pokemon", { pokemon: null, user, error: "Pokemon not found." });
     }
 
     const pokemonData = await getPokemonData(pokemonName);
     if (!pokemonData) {
-        return res.render("pokemon", { pokemon: null, error: "Pokemon data not found." });
+        return res.render("pokemon", { pokemon: null, user, error: "Pokemon data not found." });
     }
 
     const name = pokemonData.name;
     const description = getDescription(pokemonSpeciesData);
     const imageUrl = pokemonData.sprites.other["home"].front_default;
-    const pokemonCards = await getPokemonCards(name, 5);
-    const cardImages = pokemonCards.map((card) => card.images.large);
+    const cards = await getPokemonCards(name, 5);
     const evolutionChain = await getEvolutionChain(pokemonSpeciesData);
 
     if (pokemonData) {
         res.render("pokemon", {
-            pokemon: { name, description, imageUrl, evolutionChain, cardImages },
+            pokemon: { name, description, imageUrl, evolutionChain, cards },
+            user,
             error: null,
         });
     } else {
-        res.render("pokemon", { pokemon: null, error: "Pokemon not found." });
+        res.render("pokemon", { pokemon: null, user, error: "Pokemon not found." });
     }
 });
 

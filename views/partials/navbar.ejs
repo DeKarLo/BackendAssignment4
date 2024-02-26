@@ -1,5 +1,44 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-        <a class="navbar-brand" href="/">Pokemon Search</a>
+        <a class="navbar-brand" href="/">
+            <img
+                src="https://seeklogo.com/images/P/pokeball-logo-DC23868CA1-seeklogo.com.png"
+                alt="Pokeball Logo"
+                width="30"
+                height="30"
+                class="d-inline-block align-top me-2"
+            />
+            Pokémon Portal
+        </a>
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto">
+                <% if (!user) { %>
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/register">Register</a>
+                </li>
+                <% } else { %>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Welcome, <%= user.username %></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+                <% } %>
+            </ul>
+        </div>
     </div>
 </nav>
