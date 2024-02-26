@@ -25,17 +25,22 @@
             <ul class="navbar-nav ms-auto">
                 <% if (!user) { %>
                 <li class="nav-item">
-                    <a class="nav-link" href="/login">Login</a>
+                    <a class="nav-link" href="/auth/login">Login</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/register">Register</a>
+                    <a class="nav-link" href="/auth/register">Register</a>
                 </li>
                 <% } else { %>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Welcome, <%= user.username %></a>
                 </li>
+                <% if(user.isAdmin) { %>
                 <li class="nav-item">
-                    <a class="nav-link" href="/logout">Logout</a>
+                    <a class="nav-link" href="/admin">Admin</a>
+                </li>
+                <% } %>
+                <li class="nav-item">
+                    <a class="nav-link" href="/auth/logout">Logout</a>
                 </li>
                 <% } %>
             </ul>

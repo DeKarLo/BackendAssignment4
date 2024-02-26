@@ -3,11 +3,33 @@ const axios = require("axios");
 const path = require("path");
 const app = express();
 const bodyParser = require("body-parser");
+const session = require("express-session");
+const authRoutes = require("./routes/authRoutes");
+const mongoose = require("mongoose");
+const { authenticate } = require("./middleware/authMiddleware");
+const adminRoutes = require("./routes/adminRoutes");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "static")));
+app.use(
+    session({
+        secret: "your_secret_here",
+        resave: false,
+        saveUninitialized: true,
+        cookie: { secure: false },
+    })
+);
+
+mongoose
+    .connect("mongodb+srv://DeKarLo:0FzMsKxA7HxdKa1Y@cluster1.enhb9xt.mongodb.net/")
+    .then(() => {
+        console.log("Connected to MongoDB");
+    })
+    .catch((error) => {
+        console.error("Error connecting to MongoDB:", error);
+    });
 
 async function getPokemonSpeciesData(pokemonName) {
     try {
@@ -74,13 +96,13 @@ function traverse(evolution, evolutionGroups, groupIndex = 0) {
     });
 }
 app.get("/", (req, res) => {
-    user = null;
+    user = req.session.user;
     res.render("index", { user, error: null });
 });
 
-app.get("/pokemon", async (req, res) => {
+app.get("/pokemon", authenticate, async (req, res) => {
     const pokemonName = req.query.name.toLowerCase();
-    const user = null;
+    const user = req.session.user;
     const pokemonSpeciesData = await getPokemonSpeciesData(pokemonName);
     if (!pokemonSpeciesData) {
         return res.render("pokemon", { pokemon: null, user, error: "Pokemon not found." });
@@ -107,7 +129,7 @@ app.get("/pokemon", async (req, res) => {
 
 app.get("/pokemon/:name", async (req, res) => {
     const pokemonName = req.params.name.toLowerCase();
-    const user = null;
+    const user = req.session.user;
     const pokemonSpeciesData = await getPokemonSpeciesData(pokemonName);
     if (!pokemonSpeciesData) {
         return res.render("pokemon", { pokemon: null, user, error: "Pokemon not found." });
@@ -139,6 +161,9 @@ function getDescription(pokemonSpeciesData) {
     const entry = pokemonSpeciesData.flavor_text_entries.find((entry) => entry.language.name === "en");
     return entry ? entry.flavor_text : "Description not available";
 }
+
+app.use("/auth", authRoutes);
+app.use("/admin", adminRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
