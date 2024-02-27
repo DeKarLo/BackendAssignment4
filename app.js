@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 const adminRoutes = require("./routes/adminRoutes");
 const pokemonRoutes = require("./routes/pokemonRoutes");
 const quizRoutes = require("./routes/quizRoutes");
-const { isAdmin } = require("./middleware/authMiddleware");
+const { authenticate, isAdmin } = require("./middleware/authMiddleware");
 const cookieParser = require("cookie-parser");
 
 app.set("view engine", "ejs");
@@ -38,7 +38,7 @@ mongoose
 app.use("/", pokemonRoutes);
 app.use("/auth", authRoutes);
 app.use("/admin", isAdmin, adminRoutes);
-app.use("/quiz", quizRoutes);
+app.use("/quiz", authenticate, quizRoutes);
 app.post("/change-language", (req, res) => {
     const { language } = req.body;
     res.cookie("language", language, { httpOnly: true });
