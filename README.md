@@ -37,6 +37,11 @@ To access admin features, use the following credentials:
 -   **Username:** Dek
 -   **Password:** 12345678
 
+Admin account add to navbar:
+
+-  users: CRUD for user
+-  information: CRUD for infromtion displayed in index
+
 ## Deploy
 
 Deployed project on: https://pokemon-portal.onrender.com
