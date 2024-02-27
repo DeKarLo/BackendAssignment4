@@ -1,4 +1,5 @@
 const Info = require("../models/Info");
+const User = require("../models/User");
 
 async function render_admin(req, res) {
     language = req.cookies.language;
@@ -131,4 +132,139 @@ async function delete_info(req, res) {
     }
 }
 
-module.exports = { render_admin, create_info, edit_info_form, update_info, delete_info };
+async function render_users(req, res) {
+    language = req.cookies.language;
+    if (!language) {
+        language = "en";
+    }
+    users = await User.find({}).exec();
+    res.render("users", { user: req.session.user, language, users, error: null, message: null });
+}
+
+async function create_user(req, res) {
+    const { username, password, password_repeat, isAdmin } = req.body;
+    language = req.cookies.language;
+    if (!language) {
+        language = "en";
+    }
+    const user = await User.findOne({ username }).exec();
+    const newUser = new User({ username, password, isAdmin: isAdmin === "on" });
+    try {
+        await newUser.save();
+        res.render("users", {
+            user: req.session.user,
+            language,
+            users: await User.find({}).exec(),
+            error: null,
+            message: "User created successfully",
+        });
+    } catch (error) {
+        console.error("Error creating user:", error);
+        res.render("users", {
+            user: req.session.user,
+            language,
+            users: await User.find({}).exec(),
+            error: "Failed to create user",
+            message: null,
+        });
+    }
+}
+
+async function edit_user_form(req, res) {
+    const { id } = req.params;
+    language = req.cookies.language;
+    if (!language) {
+        language = "en";
+    }
+    try {
+        const user = await User.findById(id).exec();
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.render("edit_user_form", { user: req.session.user, language, user, error: null, message: null });
+    } catch (error) {
+        res.render("users", {
+            user: req.session.user,
+            language,
+            users: await User.find({}).exec(),
+            error: "Failed to edit user",
+            message: null,
+        });
+    }
+}
+
+async function update_user(req, res) {
+    const { id } = req.params;
+    const { username, isAdmin } = req.body;
+    language = req.cookies.language;
+    if (!language) {
+        language = "en";
+    }
+    try {
+        const user = await User.findById(id).exec();
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        user.username = username;
+        user.isAdmin = isAdmin;
+        await user.save();
+        res.render("users", {
+            user: req.session.user,
+            language,
+            users: await User.find({}).exec(),
+            error: null,
+            message: "User updated successfully",
+        });
+    } catch (error) {
+        res.render("users", {
+            user: req.session.user,
+            language,
+            users: await User.find({}).exec(),
+            error: "Failed to update user",
+            message: null,
+        });
+    }
+}
+
+async function delete_user(req, res) {
+    const { id } = req.params;
+    console.log(id);
+    let language = req.cookies.language;
+    if (!language) {
+        language = "en";
+    }
+    try {
+        const user = await User.findByIdAndDelete(id).exec();
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.render("users", {
+            user: req.session.user,
+            language,
+            users: await User.find({}).exec(),
+            error: null,
+            message: "User deleted successfully",
+        });
+    } catch (error) {
+        res.render("users", {
+            user: req.session.user,
+            language,
+            users: await User.find({}).exec(),
+            error: "Failed to delete user",
+            message: null,
+        });
+    }
+}
+
+module.exports = {
+    render_admin,
+    create_info,
+    edit_info_form,
+    update_info,
+    delete_info,
+    render_users,
+    create_user,
+    edit_user_form,
+    update_user,
+    delete_user,
+};

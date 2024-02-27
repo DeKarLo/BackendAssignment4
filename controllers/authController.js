@@ -85,7 +85,11 @@ async function register(req, res) {
 
 async function logout(req, res) {
     req.session.destroy();
-    res.redirect("/auth/login");
+    language = req.cookies.language;
+    if (!language) {
+        language = "en";
+    }
+    res.render("login", { user: null, error: null, language, message: "Logout successful" });
 }
 
 module.exports = { login, register, render_login, render_register, logout };

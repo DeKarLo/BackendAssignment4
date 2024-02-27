@@ -33,7 +33,7 @@
             <div class="alert alert-success" role="alert"><%= message %></div>
             <% } %>
             <h1><% if (language === 'ru') { %> Создать новую информацию <% } else { %> Create New Info <% } %></h1>
-            <form action="/admin/create" method="POST">
+            <form action="/admin/info/create" method="POST">
                 <div class="form-group">
                     <label for="picture1"> <% if (language === 'ru') { %> Изображение 1 URL: <% } else { %> Picture 1 URL: <% } %> </label>
                     <input type="text" class="form-control" id="picture1" name="picture1" required />
@@ -114,12 +114,12 @@
                                 <p><%= info.description_ru %></p>
                                 <p><%= info.description_en %></p>
                                 <div class="d-flex justify-content-between">
-                                    <form action="/admin/edit/<%= info._id %>" method="GET">
+                                    <form action="/admin/info/edit/<%= info._id %>" method="GET">
                                         <button type="submit" class="btn btn-primary">
                                             <% if (language === 'ru') { %> Редактировать <% } else { %> Edit <% } %>
                                         </button>
                                     </form>
-                                    <form action="/admin/delete/<%= info._id %>" method="POST">
+                                    <form action="/admin/info/delete/<%= info._id %>" method="POST">
                                         <button type="submit" class="btn btn-danger">
                                             <% if (language === 'ru') { %> Удалить <% } else { %> Delete <% } %>
                                         </button>

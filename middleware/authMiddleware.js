@@ -12,7 +12,7 @@ function isAdmin(req, res, next) {
     if (req.session && req.session.user && req.session.user.isAdmin) {
         next();
     } else {
-        res.status(403).send("Not an admin");
+        res.render("login", { user: null, error: "You need to be an admin to do this.", message: null });
     }
 }
 

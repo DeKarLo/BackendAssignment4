@@ -17,7 +17,7 @@
             <div class="alert alert-success" role="alert"><%= message %></div>
             <% } %>
             <h1><% if (language === 'ru') { %> Редактировать информацию <% } else { %> Edit Info <% } %></h1>
-            <form action="/admin/edit/<%= info._id %>" method="POST">
+            <form action="/admin/info/edit/<%= info._id %>" method="POST">
                 <div class="form-group">
                     <label for="picture1"> <% if (language === 'ru') { %> Изображение 1 URL: <% } else { %> Picture 1 URL: <% } %> </label>
                     <input type="text" class="form-control" id="picture1" name="picture1" value="<%= info.picture1 %>" required />

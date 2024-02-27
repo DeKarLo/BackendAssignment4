@@ -69,7 +69,10 @@
                 </li>
                 <% if(user.isAdmin) { %>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin"><% if (language === 'ru') { %>Админ<% } else { %>Admin<% } %></a>
+                    <a class="nav-link" href="/admin/info"><% if (language === 'ru') { %>Информация<% } else { %>Information<% } %></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/users"><% if (language === 'ru') { %>Пользователи<% } else { %>Users<% } %></a>
                 </li>
                 <% } %>
                 <li class="nav-item">
