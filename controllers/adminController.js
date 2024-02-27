@@ -1,8 +1,12 @@
 const Info = require("../models/Info");
 
 async function render_admin(req, res) {
+    language = req.cookies.language;
+    if (!language) {
+        language = "en";
+    }
     infos = await Info.find({}).exec();
-    res.render("admin", { user: req.session.user, infos, error: null, message: null });
+    res.render("admin", { user: req.session.user, language, infos, error: null, message: null });
 }
 
 async function create_info(req, res) {
